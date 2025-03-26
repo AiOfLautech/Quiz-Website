@@ -1,0 +1,1 @@
+// courseModel.js placeholder

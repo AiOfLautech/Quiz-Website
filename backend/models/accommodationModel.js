@@ -1,0 +1,1 @@
+// accommodationModel.js placeholder
