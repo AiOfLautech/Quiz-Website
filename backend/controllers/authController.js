@@ -1,1 +1,1 @@
-
+// authController.js placeholder
