@@ -1,0 +1,1 @@
+// accomodation.js placeholder
