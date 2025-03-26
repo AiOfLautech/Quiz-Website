@@ -1,0 +1,1 @@
+// discussionRoutes.js placeholder
