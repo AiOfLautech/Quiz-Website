@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Leaderboard</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f9f9f9;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 10px 20px;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leaderboard - Quiz Website</title>
+  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/leaderboard.css">
 </head>
 <body>
-    <header>
-        <h1>Leaderboard <i class="fa-solid fa-graduation-cap"></i></h1>
-    </header>
-    <main>
-        <p>This is the Leaderboard page.</p>
-    </main>
+  <header>
+    <img src="../assets/images/logo.png" alt="Logo" class="logo">
+    <div class="user-info">
+      <span id="usernameDisplay">Username</span>
+    </div>
+  </header>
+  <main>
+    <h1>Leaderboard</h1>
+    <table id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Leaderboard rows will be inserted dynamically -->
+      </tbody>
+    </table>
+  </main>
+  <script src="../js/leaderboard.js"></script>
 </body>
 </html>
