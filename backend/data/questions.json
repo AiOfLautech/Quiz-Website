@@ -1,1 +1,43 @@
+{
+  "MTH 101": [
+    {
+      "id": 1,
+      "question": "What is 2 + 2?",
+      "options": ["3", "4", "5", "6"],
+      "answer": "4"
+    },
+    {
+      "id": 2,
+      "question": "Solve for x: 2x - 4 = 0.",
+      "options": ["x = 1", "x = 2", "x = 3", "x = 4"],
+      "answer": "x = 2"
+    },
+    {
+      "id": 3,
+      "question": "Calculate the derivative of f(x)=x^2.",
+      "options": ["x", "2x", "x^2", "2"],
+      "answer": "2x"
+    },
+    {
+      "id": 4,
+      "question": "What is the integral of 1/x dx?",
+      "options": [],
+      "answer": "ln|x| + C"
+    }
+  ],
+  "PHY 101": [
+    {
+      "id": 1,
+      "question": "What is the speed of light in vacuum (m/s)?",
+      "options": ["3x10^8", "3x10^6", "1.5x10^8", "1.5x10^6"],
+      "answer": "3x10^8"
+    },
+    {
+      "id": 2,
+      "question": "State Newton's second law of motion.",
+      "options": [],
+      "answer": "Force equals mass times acceleration (F=ma)"
+    }
+  ]
+}
 
