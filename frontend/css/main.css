@@ -1,6 +1,8 @@
 // main.css placeholder
 /* main.css - Global Styles */
 
+/* main.css - Global Styles with Modern Gradient, Glowing Effects, and Smooth Animations */
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 * {
@@ -11,16 +13,14 @@
 
 body {
   font-family: 'Roboto', sans-serif;
-  color: #ffffff;
+  color: #fff;
   background: linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72);
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
   min-height: 100vh;
   overflow-x: hidden;
-  line-height: 1.6;
 }
 
-/* Gradient animation for the background */
 @keyframes gradientAnimation {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -30,7 +30,7 @@ body {
 header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 20px;
   background: rgba(0, 0, 0, 0.3);
 }
@@ -38,6 +38,7 @@ header {
 header .logo {
   width: 60px;
   height: 60px;
+  border-radius: 50%;
   animation: logoGlow 2s ease-in-out infinite alternate;
 }
 
@@ -46,12 +47,11 @@ header .logo {
   to { filter: drop-shadow(0 0 20px #fdbb2d); }
 }
 
-header .user-info {
+.user-info {
   font-size: 1.1rem;
   font-weight: 500;
 }
 
-/* Global links and buttons */
 a {
   color: #fdbb2d;
   text-decoration: none;
@@ -82,8 +82,8 @@ input, textarea {
   padding: 10px;
   border-radius: 5px;
   border: none;
-  margin: 10px 0;
   width: 100%;
+  margin: 10px 0;
 }
 
 form {
@@ -93,3 +93,21 @@ form {
   max-width: 500px;
   margin: 20px auto;
 }
+
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  padding-right: 40px; /* space for the toggle icon */
+}
+
+.password-container .toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #333;
+}
+
