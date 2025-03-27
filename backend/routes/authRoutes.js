@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 // Public user signup
 router.post('/signup', authController.registerUser);
 
-// Public login route (for both public users and admins)
+// Public login route (for both users and admins)
 router.post('/login', authController.loginUser);
 
 // Reset password route
