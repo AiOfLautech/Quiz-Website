@@ -1,10 +1,8 @@
-// quizManagementController.js placeholder
 const Course = require('../models/courseModel');
 
-// Add New Course
 exports.addCourse = async (req, res) => {
-  const { courseCode, timerDuration, numberOfQuestions, questionBank } = req.body;
   try {
+    const { courseCode, timerDuration, numberOfQuestions, questionBank } = req.body;
     const newCourse = new Course({
       courseCode,
       timerDuration,
@@ -12,43 +10,59 @@ exports.addCourse = async (req, res) => {
       questionBank,
     });
     await newCourse.save();
-    res.status(201).json({ message: 'Course added successfully' });
+    res.status(201).json({ message: "Course added successfully", course: newCourse });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error adding course:", error);
+    res.status(500).json({ message: "Server error adding course" });
   }
 };
 
-// Update Course
 exports.updateCourse = async (req, res) => {
-  const { courseId } = req.params;
-  const { courseCode, timerDuration, numberOfQuestions, questionBank } = req.body;
   try {
-    const course = await Course.findById(courseId);
+    const { courseId } = req.params;
+    const { courseCode, timerDuration, numberOfQuestions, questionBank } = req.body;
+    const course = await Course.findByIdAndUpdate(
+      courseId,
+      { courseCode, timerDuration, numberOfQuestions, questionBank },
+      { new: true }
+    );
     if (!course) {
-      return res.status(400).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
-    course.courseCode = courseCode || course.courseCode;
-    course.timerDuration = timerDuration || course.timerDuration;
-    course.numberOfQuestions = numberOfQuestions || course.numberOfQuestions;
-    course.questionBank = questionBank || course.questionBank;
-    await course.save();
-    res.json({ message: 'Course updated successfully' });
+    res.json({ message: "Course updated successfully", course });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error updating course:", error);
+    res.status(500).json({ message: "Server error updating course" });
   }
 };
 
-// Delete Course
 exports.deleteCourse = async (req, res) => {
-  const { courseId } = req.params;
   try {
-    const course = await Course.findById(courseId);
+    const { courseId } = req.params;
+    const course = await Course.findByIdAndDelete(courseId);
     if (!course) {
-      return res.status(400).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
-    await course.remove();
-    res.json({ message: 'Course deleted successfully' });
+    res.json({ message: "Course deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error deleting course:", error);
+    res.status(500).json({ message: "Server error deleting course" });
   }
+};
+
+exports.getCourses = async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.json({ courses });
+  } catch (error) {
+    console.error("Error retrieving courses:", error);
+    res.status(500).json({ message: "Server error retrieving courses" });
+  }
+};
+
+module.exports = {
+  addCourse: exports.addCourse,
+  updateCourse: exports.updateCourse,
+  deleteCourse: exports.deleteCourse,
+  getCourses: exports.getCourses,
 };
