@@ -3,7 +3,6 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-// Use authMiddleware to protect admin endpoints
 router.post('/announcement', authMiddleware, adminController.createAnnouncement);
 router.patch('/announcement/:announcementId', authMiddleware, adminController.updateAnnouncement);
 router.delete('/announcement/:announcementId', authMiddleware, adminController.deleteAnnouncement);
