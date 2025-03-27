@@ -1,1 +1,27 @@
 // signup.css placeholder
+/* signup.css - Specific styles for signup.html */
+
+main {
+  padding: 40px;
+  text-align: center;
+}
+
+main h1 {
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+form label {
+  font-size: 1.1rem;
+  display: block;
+  text-align: left;
+  margin: 10px auto;
+  max-width: 400px;
+}
+
+form input {
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
