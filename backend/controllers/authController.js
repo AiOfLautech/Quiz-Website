@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 exports.registerUser = async (req, res) => {
   const { username, password, email } = req.body;
   try {
+    // Check if username already exists
     const userExists = await User.findOne({ username });
     if (userExists) {
       return res.status(400).json({ message: 'Username already taken' });
@@ -13,6 +14,7 @@ exports.registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, password: hashedPassword, email });
     await newUser.save();
+    console.log("New user registered:", newUser);
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     console.error("Registration error:", error);
@@ -20,7 +22,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login (for both public users and admins) using username and password
+// Login a user (or admin) using username and password
 exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -65,7 +67,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// Admin registration endpoint (protected by an invite key)
+// Admin registration endpoint (requires invite key)
 exports.registerAdmin = async (req, res) => {
   const { username, password, inviteKey, email } = req.body;
   if (inviteKey !== process.env.ADMIN_INVITE_KEY) {
@@ -79,6 +81,7 @@ exports.registerAdmin = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newAdmin = new User({ username, password: hashedPassword, role: 'admin', email });
     await newAdmin.save();
+    console.log("New admin registered:", newAdmin);
     res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
     console.error("Admin registration error:", error);
