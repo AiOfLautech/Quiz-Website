@@ -1,1 +1,37 @@
 // discussion.css placeholder
+/* discussion.css - Styles for discussion.html (discussion posts, threaded replies) */
+
+#discussionPosts {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.discussion-post {
+  background: rgba(0,0,0,0.5);
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.discussion-post.admin {
+  border-left: 4px solid #fdbb2d;
+}
+
+#discussionForm {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+#discussionForm textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+}
+
+#discussionForm button {
+  margin-top: 10px;
+  font-weight: bold;
+}
