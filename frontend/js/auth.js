@@ -1,5 +1,3 @@
-// This file handles client-side authentication logic for signup, login, and reset password.
-
 document.addEventListener("DOMContentLoaded", () => {
   // Signup Form Handler
   const signupForm = document.getElementById("signupForm");
@@ -33,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Login Form Handler
+  // Login Form Handler (used by public login)
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
@@ -48,12 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         const data = await res.json();
         if (res.ok) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          // Redirect based on role
           if (data.user.role === "admin") {
+            localStorage.setItem("adminToken", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
             window.location.href = "/admin/admin.html";
           } else {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
             window.location.href = "main.html";
           }
         } else {
@@ -71,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (resetForm) {
     resetForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const username = document.getElementById("email").value.trim(); // You might want to rename this input in reset-password.html to "username"
+      const username = document.getElementById("email").value.trim(); // Rename this to "username" ideally
       const newPassword = document.getElementById("newPassword").value.trim();
       try {
         const res = await fetch("/api/auth/reset-password", {
