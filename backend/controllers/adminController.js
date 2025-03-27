@@ -6,7 +6,7 @@ const Accommodation = require('../models/accommodationModel');
 
 /**
  * Generate an auto-generated password for an admin user.
- * Enforces a one-hour cooldown.
+ * Enforces a one-hour cooldown based on lastAutoPasswordAt.
  */
 exports.generateAutoPassword = async (req, res) => {
   try {
