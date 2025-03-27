@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Announcement Endpoints
 router.post('/announcement', /* authMiddleware, */ adminController.createAnnouncement);
