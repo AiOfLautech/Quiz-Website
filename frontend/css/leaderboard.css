@@ -1,1 +1,24 @@
 // leaderboard.css placeholder
+/* leaderboard.css - Styles for leaderboard.html (tables, rankings) */
+
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+thead {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.3);
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.1);
+}
