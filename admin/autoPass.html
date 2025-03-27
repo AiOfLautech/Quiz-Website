@@ -1,4 +1,3 @@
-<!-- Auto Password Generator -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,15 +30,13 @@
     </aside>
     <div class="main-content">
       <h1>Generate Auto Password</h1>
-      <p>Click the button below to generate a new auto‑generated password. The password is valid for one hour only.</p>
+      <p>Click the button below to generate a new auto‑generated password. This password is valid for one hour only.</p>
       <form id="autoPassForm">
         <label for="adminUsername">Admin Username:</label>
         <input type="text" id="adminUsername" name="username" required>
         <button type="submit">Generate Password</button>
       </form>
-      <div id="generatedPassword">
-        <!-- Generated password will be displayed here -->
-      </div>
+      <div id="generatedPassword" style="margin-top:20px; font-size:1.2rem; font-weight: bold;"></div>
     </div>
   </div>
   <script src="admin.js"></script>
