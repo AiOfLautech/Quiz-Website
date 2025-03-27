@@ -1,1 +1,2 @@
-// admin.js placeholder
+// Admin-related JavaScript
+console.log('Admin Panel Loaded');
