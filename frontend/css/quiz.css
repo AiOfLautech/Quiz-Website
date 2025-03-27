@@ -1,1 +1,42 @@
 // quiz.css placeholder
+/* quiz.css - Styles for quiz.html (quiz container, timer, navigation; supports MCQ and text-input questions) */
+
+#quizContainer {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+#quizContainer .question {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+#quizContainer .options {
+  margin-top: 10px;
+}
+
+#quizContainer .options div {
+  margin: 10px 0;
+  text-align: left;
+}
+
+#quizNavigation {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+#timer {
+  font-size: 1.3rem;
+  text-align: center;
+  margin: 20px auto;
+}
+
+#submitQuiz {
+  display: block;
+  margin: 20px auto;
+}
