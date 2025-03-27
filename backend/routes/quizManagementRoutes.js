@@ -1,15 +1,12 @@
-// quizManagementRoutes.js placeholder
 const express = require('express');
 const router = express.Router();
 const quizManagementController = require('../controllers/quizManagementController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-// Add a New Course
-router.post('/course', /* authMiddleware, */ quizManagementController.addCourse);
-
-// Update Course Settings (by course ID)
-router.patch('/course/:courseId', /* authMiddleware, */ quizManagementController.updateCourse);
-
-// Delete a Course (by course ID)
-router.delete('/course/:courseId', /* authMiddleware, */ quizManagementController.deleteCourse);
+// These routes are protected (require admin token)
+router.post('/course', authMiddleware, quizManagementController.addCourse);
+router.patch('/course/:courseId', authMiddleware, quizManagementController.updateCourse);
+router.delete('/course/:courseId', authMiddleware, quizManagementController.deleteCourse);
+router.get('/courses', authMiddleware, quizManagementController.getCourses);
 
 module.exports = router;
