@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Signup Form Handler
+  // Signup Form Handler (Public)
   const signupForm = document.getElementById("signupForm");
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Login Form Handler (used by public login)
+  // Login Form Handler (Public)
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
@@ -65,12 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Reset Password Form Handler
+  // Reset Password Form Handler (Public)
   const resetForm = document.getElementById("resetPasswordForm");
   if (resetForm) {
     resetForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const username = document.getElementById("email").value.trim(); // Rename this to "username" ideally
+      const username = document.getElementById("email").value.trim(); // ideally, rename this to "username"
       const newPassword = document.getElementById("newPassword").value.trim();
       try {
         const res = await fetch("/api/auth/reset-password", {
