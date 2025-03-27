@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await res.json();
       if (res.ok) {
-        // Verify that the user is an admin
+        // Ensure the user is an admin
         if (data.user.role === 'admin') {
           localStorage.setItem('adminToken', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
           loginMessage.innerHTML = '<p style="color:red;">Access denied: Not an admin account.</p>';
         }
       } else {
-        loginMessage.innerHTML = `<p style="color:red;">${data.message || "Login failed"}</p>`;
+        loginMessage.innerHTML = `<p style="color:red;">${data.message || 'Login failed'}</p>`;
       }
     } catch (error) {
       console.error("Admin login error:", error);
