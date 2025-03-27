@@ -1,151 +1,87 @@
-const crypto = require('crypto');
-const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
-const Announcement = require('../models/announcementModel');
-const Accommodation = require('../models/accommodationModel');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-exports.generateAutoPassword = async (req, res) => {
+// Public user registration
+exports.registerUser = async (req, res) => {
+  const { username, password, email } = req.body; // Email is now optional
   try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
+    const userExists = await User.findOne({ username });
+    if (userExists) {
+      return res.status(400).json({ message: 'Username already taken' });
     }
-    const { username } = req.body;
-    const user = await User.findOne({ username, role: 'admin' });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, password: hashedPassword, email });
+    await newUser.save();
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ message: "Server error during registration" });
+  }
+};
+
+// Login a user (or admin) using username and password
+exports.loginUser = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    if (!username || !password) {
+      return res.status(400).json({ message: "Username and password are required" });
+    }
+    const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).json({ message: 'Admin user not found' });
+      return res.status(401).json({ message: "Invalid username or password" });
     }
-    if (user.lastAutoPasswordAt && Date.now() - user.lastAutoPasswordAt < 3600000) {
-      return res.status(429).json({ message: 'Auto-generated password can only be requested once per hour' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid username or password" });
     }
-    const autoPassword = crypto.randomBytes(4).toString('hex');
-    const hashedPassword = await bcrypt.hash(autoPassword, 10);
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    res.json({ token, user: { id: user._id, username: user.username, role: user.role } });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error during login" });
+  }
+};
+
+// Reset password using username
+exports.resetPassword = async (req, res) => {
+  const { username, newPassword } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
-    user.lastAutoPasswordAt = Date.now();
     await user.save();
-    return res.json({ message: 'Auto-generated password set', autoPassword });
+    res.json({ message: "Password reset successfully" });
   } catch (error) {
-    console.error('Error generating auto-password:', error);
-    return res.status(500).json({ message: 'Server error in auto password generation' });
+    console.error("Reset password error:", error);
+    res.status(500).json({ message: "Server error during password reset" });
   }
 };
 
-exports.createAnnouncement = async (req, res) => {
+// Admin registration endpoint (requires invite key)
+exports.registerAdmin = async (req, res) => {
+  const { username, password, inviteKey, email } = req.body;
+  if (inviteKey !== process.env.ADMIN_INVITE_KEY) {
+    return res.status(403).json({ message: "Invalid admin invitation key" });
+  }
   try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
+    const adminExists = await User.findOne({ username });
+    if (adminExists) {
+      return res.status(400).json({ message: "Username already taken" });
     }
-    const { title, content } = req.body;
-    const newAnnouncement = new Announcement({
-      title,
-      content,
-      createdBy: req.user._id,
-    });
-    await newAnnouncement.save();
-    return res.status(201).json({ message: 'Announcement created successfully', announcement: newAnnouncement });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = new User({ username, password: hashedPassword, role: 'admin', email });
+    await newAdmin.save();
+    res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
-    console.error('Error creating announcement:', error);
-    return res.status(500).json({ message: 'Server error creating announcement' });
+    console.error("Admin registration error:", error);
+    res.status(500).json({ message: "Server error during admin registration" });
   }
-};
-
-exports.updateAnnouncement = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-    const { announcementId } = req.params;
-    const { title, content } = req.body;
-    const announcement = await Announcement.findByIdAndUpdate(
-      announcementId,
-      { title, content },
-      { new: true }
-    );
-    if (!announcement) {
-      return res.status(404).json({ message: 'Announcement not found' });
-    }
-    return res.json({ message: 'Announcement updated successfully', announcement });
-  } catch (error) {
-    console.error('Error updating announcement:', error);
-    return res.status(500).json({ message: 'Server error updating announcement' });
-  }
-};
-
-exports.deleteAnnouncement = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-    const { announcementId } = req.params;
-    await Announcement.findByIdAndDelete(announcementId);
-    return res.json({ message: 'Announcement deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting announcement:', error);
-    return res.status(500).json({ message: 'Server error deleting announcement' });
-  }
-};
-
-exports.createAccommodation = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-    const { title, description, videoUrl } = req.body;
-    const newAccommodation = new Accommodation({
-      title,
-      description,
-      videoUrl,
-      createdBy: req.user._id,
-    });
-    await newAccommodation.save();
-    return res.status(201).json({ message: 'Accommodation created successfully', accommodation: newAccommodation });
-  } catch (error) {
-    console.error('Error creating accommodation:', error);
-    return res.status(500).json({ message: 'Server error creating accommodation' });
-  }
-};
-
-exports.updateAccommodation = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-    const { accommodationId } = req.params;
-    const { title, description, videoUrl } = req.body;
-    const accommodation = await Accommodation.findByIdAndUpdate(
-      accommodationId,
-      { title, description, videoUrl },
-      { new: true }
-    );
-    if (!accommodation) {
-      return res.status(404).json({ message: 'Accommodation not found' });
-    }
-    return res.json({ message: 'Accommodation updated successfully', accommodation });
-  } catch (error) {
-    console.error('Error updating accommodation:', error);
-    return res.status(500).json({ message: 'Server error updating accommodation' });
-  }
-};
-
-exports.deleteAccommodation = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-    const { accommodationId } = req.params;
-    await Accommodation.findByIdAndDelete(accommodationId);
-    return res.json({ message: 'Accommodation deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting accommodation:', error);
-    return res.status(500).json({ message: 'Server error deleting accommodation' });
-  }
-};
-
-module.exports = {
-  generateAutoPassword: exports.generateAutoPassword,
-  createAnnouncement: exports.createAnnouncement,
-  updateAnnouncement: exports.updateAnnouncement,
-  deleteAnnouncement: exports.deleteAnnouncement,
-  createAccommodation: exports.createAccommodation,
-  updateAccommodation: exports.updateAccommodation,
-  deleteAccommodation: exports.deleteAccommodation,
 };
