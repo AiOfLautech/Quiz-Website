@@ -1,1 +1,41 @@
 // mainpage.css placeholder
+/* mainpage.css - Styles for main.html (course selection with animated transitions) */
+
+main {
+  padding: 40px;
+  text-align: center;
+}
+
+main h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.courses {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.course {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  width: 200px;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.course:hover {
+  transform: scale(1.05);
+}
+
+.course h2 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.course button {
+  width: 100%;
+  margin-top: 10px;
+}
