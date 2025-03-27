@@ -2,11 +2,10 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Register (Signup) a new user
+// Public user registration
 exports.registerUser = async (req, res) => {
   const { username, password } = req.body;
   try {
-    // Check if username already exists
     const userExists = await User.findOne({ username });
     if (userExists) {
       return res.status(400).json({ message: 'Username already taken' });
@@ -21,7 +20,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login a user using username and password
+// Login endpoint used by both public and admin accounts
 exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -48,7 +47,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Reset password (using username)
+// Reset password endpoint using username
 exports.resetPassword = async (req, res) => {
   const { username, newPassword } = req.body;
   try {
@@ -63,5 +62,26 @@ exports.resetPassword = async (req, res) => {
   } catch (error) {
     console.error("Reset password error:", error);
     res.status(500).json({ message: "Server error during password reset" });
+  }
+};
+
+// Admin registration endpoint (protected by an invite key)
+exports.registerAdmin = async (req, res) => {
+  const { username, password, inviteKey } = req.body;
+  if (inviteKey !== process.env.ADMIN_INVITE_KEY) {
+    return res.status(403).json({ message: "Invalid admin invitation key" });
+  }
+  try {
+    const adminExists = await User.findOne({ username });
+    if (adminExists) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = new User({ username, password: hashedPassword, role: 'admin' });
+    await newAdmin.save();
+    res.status(201).json({ message: "Admin registered successfully" });
+  } catch (error) {
+    console.error("Admin registration error:", error);
+    res.status(500).json({ message: "Server error during admin registration" });
   }
 };
