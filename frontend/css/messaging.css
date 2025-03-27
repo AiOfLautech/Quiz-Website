@@ -1,1 +1,47 @@
 // messaging.css placeholder
+/* messaging.css - Styles for messaging.html (inbox, message form) */
+
+#inbox {
+  max-width: 800px;
+  margin: 20px auto;
+  background: rgba(0,0,0,0.4);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.message {
+  padding: 10px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+}
+
+form#messageForm {
+  max-width: 800px;
+  margin: 20px auto;
+  background: rgba(0,0,0,0.4);
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+form#messageForm label {
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+form#messageForm input,
+form#messageForm textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: none;
+}
+
+form#messageForm button {
+  margin-top: 10px;
+  font-weight: bold;
+}
