@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await res.json();
       if (res.ok) {
-        // Ensure the user is an admin
         if (data.user.role === 'admin') {
           localStorage.setItem('adminToken', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
