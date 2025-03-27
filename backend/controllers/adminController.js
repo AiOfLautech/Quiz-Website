@@ -1,4 +1,3 @@
-// adminController.js placeholder
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
@@ -7,21 +6,22 @@ const Accommodation = require('../models/accommodationModel');
 
 /**
  * Generate an auto-generated password for an admin user.
- * Enforces a one-hour cooldown based on the user's lastAutoPasswordAt timestamp.
+ * Enforces a one-hour cooldown.
  */
 exports.generateAutoPassword = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     const { username } = req.body;
-    // Find the admin user by username and ensure they have admin role
+    // Find the admin user by username and ensure they are admin.
     const user = await User.findOne({ username, role: 'admin' });
     if (!user) {
       return res.status(404).json({ message: 'Admin user not found' });
     }
-    // Check if the admin generated a password within the last hour
     if (user.lastAutoPasswordAt && Date.now() - user.lastAutoPasswordAt < 3600000) {
       return res.status(429).json({ message: 'Auto-generated password can only be requested once per hour' });
     }
-    // Generate a random 8-character password (hex encoded 4 bytes)
     const autoPassword = crypto.randomBytes(4).toString('hex');
     const hashedPassword = await bcrypt.hash(autoPassword, 10);
     user.password = hashedPassword;
@@ -39,6 +39,9 @@ exports.generateAutoPassword = async (req, res) => {
  */
 exports.createAnnouncement = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     const { title, content } = req.body;
     const newAnnouncement = new Announcement({
       title,
@@ -58,6 +61,9 @@ exports.createAnnouncement = async (req, res) => {
  */
 exports.updateAnnouncement = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     const { announcementId } = req.params;
     const { title, content } = req.body;
     const announcement = await Announcement.findByIdAndUpdate(
@@ -80,6 +86,9 @@ exports.updateAnnouncement = async (req, res) => {
  */
 exports.deleteAnnouncement = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     const { announcementId } = req.params;
     await Announcement.findByIdAndDelete(announcementId);
     return res.json({ message: 'Announcement deleted successfully' });
@@ -94,6 +103,9 @@ exports.deleteAnnouncement = async (req, res) => {
  */
 exports.createAccommodation = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     const { title, description, videoUrl } = req.body;
     const newAccommodation = new Accommodation({
       title,
@@ -114,6 +126,9 @@ exports.createAccommodation = async (req, res) => {
  */
 exports.updateAccommodation = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     const { accommodationId } = req.params;
     const { title, description, videoUrl } = req.body;
     const accommodation = await Accommodation.findByIdAndUpdate(
@@ -136,6 +151,9 @@ exports.updateAccommodation = async (req, res) => {
  */
 exports.deleteAccommodation = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
     const { accommodationId } = req.params;
     await Accommodation.findByIdAndDelete(accommodationId);
     return res.json({ message: 'Accommodation deleted successfully' });
