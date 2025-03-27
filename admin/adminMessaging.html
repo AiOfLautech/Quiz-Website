@@ -1,2 +1,41 @@
 <!-- Admin Messaging Page -->
-<h1>Admin Messaging</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Messaging - Admin Panel</title>
+  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="sidebar">
+      <div class="logo-container">
+        <img src="../assets/images/logo.png" alt="Logo" class="logo">
+        <h2>Admin Panel</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="admin.html">Dashboard</a></li>
+          <li><a href="quizManagement.html"><i class="fas fa-tasks"></i> Quiz Management</a></li>
+          <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+          <li><a href="accomodations.html"><i class="fas fa-hotel"></i> Accommodations</a></li>
+          <li><a href="adminMessaging.html" class="active"><i class="fas fa-envelope"></i> Messaging</a></li>
+          <li><a href="profileAdmin.html"><i class="fas fa-user-cog"></i> Profile</a></li>
+          <li><a href="autoPass.html"><i class="fas fa-key"></i> Generate Password</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="main-content">
+      <h1>Admin Messaging</h1>
+      <div id="adminInbox">
+        <!-- List of messages will be loaded dynamically via admin.js -->
+      </div>
+    </div>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>
