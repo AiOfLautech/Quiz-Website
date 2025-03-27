@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>User Profile</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f9f9f9;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 10px 20px;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile - Quiz Website</title>
+  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/profile.css">
 </head>
 <body>
-    <header>
-        <h1>User Profile <i class="fa-solid fa-graduation-cap"></i></h1>
-    </header>
-    <main>
-        <p>This is the User Profile page.</p>
-    </main>
+  <header>
+    <img src="../assets/images/logo.png" alt="Logo" class="logo">
+    <div class="user-info">
+      <span id="usernameDisplay">Username</span>
+    </div>
+  </header>
+  <main>
+    <h1>Your Profile</h1>
+    <form id="profileForm" action="/api/auth/update-profile" method="PATCH">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      
+      <label for="avatar">Avatar URL:</label>
+      <input type="text" id="avatar" name="avatar">
+      
+      <button type="submit">Update Profile</button>
+    </form>
+  </main>
+  <script src="../js/profile.js"></script>
 </body>
 </html>
