@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Quiz</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f9f9f9;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding: 10px 20px;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz - Quiz Website</title>
+  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/quiz.css">
 </head>
 <body>
-    <header>
-        <h1>Quiz <i class="fa-solid fa-graduation-cap"></i></h1>
-    </header>
-    <main>
-        <p>This is the Quiz page.</p>
-    </main>
+  <header>
+    <img src="../assets/images/logo.png" alt="Logo" class="logo">
+    <div class="user-info">
+      <span id="usernameDisplay">Username</span>
+    </div>
+  </header>
+  <main>
+    <h1>Quiz</h1>
+    <div id="quizContainer">
+      <!-- Quiz questions will be dynamically injected here -->
+    </div>
+    <div id="quizNavigation">
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+    </div>
+    <div id="timer">Time Remaining: <span id="timeRemaining"></span></div>
+    <button id="submitQuiz">Submit Quiz</button>
+  </main>
+  <script src="../js/quiz.js"></script>
 </body>
 </html>
