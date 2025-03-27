@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const username = document.getElementById("name").value.trim();
       const password = document.getElementById("password").value.trim();
       const confirmPassword = document.getElementById("confirmPassword").value.trim();
+      // Optional: email field (if provided)
+      const emailField = document.getElementById("email");
+      const email = emailField ? emailField.value.trim() : "";
       if (password !== confirmPassword) {
         alert("Passwords do not match!");
         return;
@@ -15,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch("/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password })
+          body: JSON.stringify({ username, password, email })
         });
         const data = await res.json();
         if (res.ok) {
@@ -70,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (resetForm) {
     resetForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const username = document.getElementById("email").value.trim(); // ideally, rename this to "username"
+      const username = document.getElementById("email").value.trim(); // Rename this input if needed
       const newPassword = document.getElementById("newPassword").value.trim();
       try {
         const res = await fetch("/api/auth/reset-password", {
