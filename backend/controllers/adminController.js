@@ -4,17 +4,12 @@ const User = require('../models/userModel');
 const Announcement = require('../models/announcementModel');
 const Accommodation = require('../models/accommodationModel');
 
-/**
- * Generate an auto-generated password for an admin user.
- * Enforces a one-hour cooldown based on lastAutoPasswordAt.
- */
 exports.generateAutoPassword = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
     const { username } = req.body;
-    // Find the admin user by username and ensure they are admin.
     const user = await User.findOne({ username, role: 'admin' });
     if (!user) {
       return res.status(404).json({ message: 'Admin user not found' });
@@ -34,9 +29,6 @@ exports.generateAutoPassword = async (req, res) => {
   }
 };
 
-/**
- * Create a new announcement.
- */
 exports.createAnnouncement = async (req, res) => {
   try {
     if (!req.user) {
@@ -56,9 +48,6 @@ exports.createAnnouncement = async (req, res) => {
   }
 };
 
-/**
- * Update an existing announcement.
- */
 exports.updateAnnouncement = async (req, res) => {
   try {
     if (!req.user) {
@@ -81,9 +70,6 @@ exports.updateAnnouncement = async (req, res) => {
   }
 };
 
-/**
- * Delete an announcement.
- */
 exports.deleteAnnouncement = async (req, res) => {
   try {
     if (!req.user) {
@@ -98,9 +84,6 @@ exports.deleteAnnouncement = async (req, res) => {
   }
 };
 
-/**
- * Create a new accommodation post.
- */
 exports.createAccommodation = async (req, res) => {
   try {
     if (!req.user) {
@@ -121,9 +104,6 @@ exports.createAccommodation = async (req, res) => {
   }
 };
 
-/**
- * Update an existing accommodation post.
- */
 exports.updateAccommodation = async (req, res) => {
   try {
     if (!req.user) {
@@ -146,9 +126,6 @@ exports.updateAccommodation = async (req, res) => {
   }
 };
 
-/**
- * Delete an accommodation post.
- */
 exports.deleteAccommodation = async (req, res) => {
   try {
     if (!req.user) {
