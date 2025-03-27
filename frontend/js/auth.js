@@ -7,9 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const username = document.getElementById("name").value.trim();
       const password = document.getElementById("password").value.trim();
       const confirmPassword = document.getElementById("confirmPassword").value.trim();
-      // Optional: email field (if provided)
-      const emailField = document.getElementById("email");
-      const email = emailField ? emailField.value.trim() : "";
+      // Optionally, get email if provided
+      const email = document.getElementById("email") ? document.getElementById("email").value.trim() : "";
       if (password !== confirmPassword) {
         alert("Passwords do not match!");
         return;
@@ -18,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch("/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password, email })
+          body: JSON.stringify({ username, password, email }),
         });
         const data = await res.json();
         if (res.ok) {
@@ -45,10 +44,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password })
+          body: JSON.stringify({ username, password }),
         });
         const data = await res.json();
         if (res.ok) {
+          // Save token and user data. If admin, store under adminToken.
           if (data.user.role === "admin") {
             localStorage.setItem("adminToken", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
@@ -73,13 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (resetForm) {
     resetForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const username = document.getElementById("email").value.trim(); // Rename this input if needed
+      // For reset, the input may be labeled "email" but is used as username.
+      const username = document.getElementById("email").value.trim();
       const newPassword = document.getElementById("newPassword").value.trim();
       try {
         const res = await fetch("/api/auth/reset-password", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, newPassword })
+          body: JSON.stringify({ username, newPassword }),
         });
         const data = await res.json();
         alert(data.message);
