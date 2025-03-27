@@ -1,19 +1,14 @@
-// authRoutes.js placeholder
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 
-// User Signup
+// Route for user registration (signup)
 router.post('/signup', authController.registerUser);
 
-// User Login
+// Route for user login using username and password
 router.post('/login', authController.loginUser);
 
-// Reset Password (for simplicity, using one endpoint; adjust as needed)
+// Route for password reset using username and newPassword
 router.post('/reset-password', authController.resetPassword);
-
-// Update Profile (requires authentication)
-// Uncomment the next line if you have an authentication middleware defined
-// router.patch('/update-profile', authMiddleware, authController.updateProfile);
 
 module.exports = router;
