@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 // Public user registration
 exports.registerUser = async (req, res) => {
-  const { username, password, email } = req.body; // Email is now optional
+  const { username, password, email } = req.body;
   try {
     const userExists = await User.findOne({ username });
     if (userExists) {
@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login a user (or admin) using username and password
+// Login (for both public users and admins) using username and password
 exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -65,7 +65,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// Admin registration endpoint (requires invite key)
+// Admin registration endpoint (protected by an invite key)
 exports.registerAdmin = async (req, res) => {
   const { username, password, inviteKey, email } = req.body;
   if (inviteKey !== process.env.ADMIN_INVITE_KEY) {
@@ -84,4 +84,11 @@ exports.registerAdmin = async (req, res) => {
     console.error("Admin registration error:", error);
     res.status(500).json({ message: "Server error during admin registration" });
   }
+};
+
+module.exports = {
+  registerUser: exports.registerUser,
+  loginUser: exports.loginUser,
+  resetPassword: exports.resetPassword,
+  registerAdmin: exports.registerAdmin,
 };
