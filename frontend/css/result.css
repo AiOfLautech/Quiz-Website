@@ -1,1 +1,22 @@
 // result.css placeholder
+/* result.css - Styles for result.html (result visualization, pie chart) */
+
+#resultChart {
+  width: 300px;
+  height: 300px;
+  margin: 20px auto;
+  background: radial-gradient(circle, #fdbb2d, #b21f1f);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+p {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+#downloadResult {
+  margin-top: 20px;
+  font-weight: bold;
+}
