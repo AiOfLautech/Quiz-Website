@@ -1,1 +1,95 @@
 // main.css placeholder
+/* main.css - Global Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Gradient animation for the background */
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+header .logo {
+  width: 60px;
+  height: 60px;
+  animation: logoGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  from { filter: drop-shadow(0 0 5px #ffffff); }
+  to { filter: drop-shadow(0 0 20px #fdbb2d); }
+}
+
+header .user-info {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Global links and buttons */
+a {
+  color: #fdbb2d;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #ffdd57;
+}
+
+button {
+  cursor: pointer;
+  background: #fdbb2d;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #333;
+  font-weight: 700;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: #ffdd57;
+  transform: scale(1.05);
+}
+
+input, textarea {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  margin: 10px 0;
+  width: 100%;
+}
+
+form {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: 20px auto;
+}
