@@ -1,1 +1,24 @@
 // announcement.css placeholder
+/* announcement.css - Styles for announcement.html (announcement posts) */
+
+#announcementsList {
+  max-width: 800px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+.announcement {
+  background: rgba(0,0,0,0.5);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+.announcement h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.announcement p {
+  font-size: 1.1rem;
+}
