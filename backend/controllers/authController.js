@@ -4,14 +4,14 @@ const jwt = require('jsonwebtoken');
 
 // Public user registration
 exports.registerUser = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body; // Email is now optional
   try {
     const userExists = await User.findOne({ username });
     if (userExists) {
       return res.status(400).json({ message: 'Username already taken' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, password: hashedPassword });
+    const newUser = new User({ username, password: hashedPassword, email });
     await newUser.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login endpoint used by both public and admin accounts
+// Login a user (or admin) using username and password
 exports.loginUser = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -47,7 +47,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Reset password endpoint using username
+// Reset password using username
 exports.resetPassword = async (req, res) => {
   const { username, newPassword } = req.body;
   try {
@@ -65,9 +65,9 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// Admin registration endpoint (protected by an invite key)
+// Admin registration endpoint (requires invite key)
 exports.registerAdmin = async (req, res) => {
-  const { username, password, inviteKey } = req.body;
+  const { username, password, inviteKey, email } = req.body;
   if (inviteKey !== process.env.ADMIN_INVITE_KEY) {
     return res.status(403).json({ message: "Invalid admin invitation key" });
   }
@@ -77,7 +77,7 @@ exports.registerAdmin = async (req, res) => {
       return res.status(400).json({ message: "Username already taken" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new User({ username, password: hashedPassword, role: 'admin' });
+    const newAdmin = new User({ username, password: hashedPassword, role: 'admin', email });
     await newAdmin.save();
     res.status(201).json({ message: "Admin registered successfully" });
   } catch (error) {
