@@ -1,1 +1,32 @@
-
+{
+  "name": "dynamic-quiz-website",
+  "version": "1.0.0",
+  "description": "A dynamic quiz website with persistent quiz sessions, admin management, AI chat integration, and more.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "keywords": [
+    "quiz",
+    "nodejs",
+    "express",
+    "mongodb",
+    "ai-chat",
+    "admin"
+  ],
+  "author": "AI OF LAUTECH",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
