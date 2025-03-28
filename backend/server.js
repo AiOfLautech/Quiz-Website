@@ -14,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static public files
+app.use(express.static(path.join(__dirname, '../admin')));
 app.use(express.static(path.join(__dirname, '../frontend/pages')));
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
 app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
