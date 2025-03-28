@@ -1,59 +1,24 @@
-// discussion.js placeholder
-document.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("token");
-  const discussionPosts = document.getElementById("discussionPosts");
-
+document.addEventListener("DOMContentLoaded", () => {
   async function loadDiscussions() {
     try {
-      const res = await fetch("/api/discussion", {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
+      const res = await fetch("/api/public/discussion");
       const data = await res.json();
       if (res.ok && data.discussions) {
-        discussionPosts.innerHTML = "";
-        data.discussions.forEach(post => {
-          const postDiv = document.createElement("div");
-          postDiv.classList.add("discussion-post");
-          if (post.createdBy && post.createdBy.role === "admin") {
-            postDiv.classList.add("admin");
-          }
-          postDiv.innerHTML = `<p>${post.content}</p><small>By: ${post.createdBy.username}</small>`;
-          discussionPosts.appendChild(postDiv);
-        });
+        const discussionPosts = document.getElementById("discussionPosts");
+        discussionPosts.innerHTML = data.discussions
+          .map(post =>
+            `<div class="discussion-post">
+               <p>${post.content}</p>
+               <small>Posted by: ${post.createdBy ? post.createdBy.username : "Unknown"}</small>
+             </div>`
+          )
+          .join('');
       } else {
-        alert(data.message || "Failed to load discussions");
+        console.error("Failed to load discussions:", data.message);
       }
     } catch (error) {
       console.error("Error loading discussions:", error);
     }
   }
-
   loadDiscussions();
-
-  const discussionForm = document.getElementById("discussionForm");
-  if (discussionForm) {
-    discussionForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const content = document.getElementById("discussionContent").value;
-      try {
-        const res = await fetch("/api/discussion", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ content })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          document.getElementById("discussionContent").value = "";
-          loadDiscussions();
-        } else {
-          alert(data.message || "Failed to post discussion");
-        }
-      } catch (error) {
-        console.error("Discussion post error:", error);
-      }
-    });
-  }
 });
