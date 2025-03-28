@@ -1,56 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Main - Quiz Website</title>
-  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon" />
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/mainpage.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/mainpage.css" />
 </head>
 <body>
-  <div class="container">
-    <aside class="sidebar">
-      <ul>
-        <li><a href="main.html" class="active"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="quiz.html"><i class="fas fa-edit"></i> Quiz</a></li>
-        <li><a href="tutorial.html"><i class="fas fa-video"></i> Tutorials</a></li>
-        <li><a href="result.html"><i class="fas fa-chart-pie"></i> Results</a></li>
-        <li><a href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard</a></li>
-        <li><a href="discussion.html"><i class="fas fa-comments"></i> Discussion</a></li>
-        <li><a href="messaging.html"><i class="fas fa-envelope"></i> Messaging</a></li>
-        <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
-        <li><a href="accomodation.html"><i class="fas fa-hotel"></i> Accommodations</a></li>
-        <li><a href="aiChat.html"><i class="fas fa-robot"></i> AI Chat</a></li>
-      </ul>
-    </aside>
-    <div class="main-content">
-      <header>
-        <img src="../assets/images/logo.png" alt="Logo" class="logo">
-        <div class="user-info">
-          <span id="usernameDisplay">Username</span>
-        </div>
-      </header>
-      <section>
-        <h1>Welcome, <span id="welcomeUser">Username</span></h1>
-        <p>Select a course below to start your quiz.</p>
-        <div class="courses">
-          <!-- Example course cards -->
-          <div class="course" data-id="course1">
-            <h2>MTH 101</h2>
-            <button onclick="startQuiz('course1')">Start Quiz</button>
-          </div>
-          <div class="course" data-id="course2">
-            <h2>PHY 101</h2>
-            <button onclick="startQuiz('course2')">Start Quiz</button>
-          </div>
-          <!-- More courses as needed -->
-        </div>
-      </section>
+  <header>
+    <img src="../assets/images/logo.png" alt="Logo" class="logo" />
+    <div class="user-info">
+      <span id="usernameDisplay">Username</span>
     </div>
-  </div>
-  <script src="../js/mainpage.js"></script>
+  </header>
+  <main>
+    <h1>Welcome, <span id="welcomeUser">Username</span></h1>
+    <section class="courses"></section>
+  </main>
+  <script src="../js/course.js"></script>
 </body>
 </html>
