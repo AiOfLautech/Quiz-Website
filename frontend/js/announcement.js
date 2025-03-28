@@ -1,29 +1,24 @@
-// announcement.js placeholder
-document.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("token");
-  const announcementsList = document.getElementById("announcementsList");
-
-  async function loadAnnouncements() {
+document.addEventListener("DOMContentLoaded", () => {
+  async function loadPublicAnnouncements() {
     try {
-      const res = await fetch("/api/admin/announcement", {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
+      const res = await fetch("/api/public/announcement");
       const data = await res.json();
       if (res.ok && data.announcements) {
-        announcementsList.innerHTML = "";
-        data.announcements.forEach(announcement => {
-          const div = document.createElement("div");
-          div.classList.add("announcement");
-          div.innerHTML = `<h2>${announcement.title}</h2><p>${announcement.content}</p>`;
-          announcementsList.appendChild(div);
-        });
+        const announcementsList = document.getElementById("announcementsList");
+        announcementsList.innerHTML = data.announcements
+          .map(announcement =>
+            `<div class="announcement-item">
+               <h2>${announcement.title}</h2>
+               <p>${announcement.content}</p>
+             </div>`
+          )
+          .join('');
       } else {
-        alert(data.message || "Failed to load announcements");
+        console.error("Failed to load announcements:", data.message);
       }
     } catch (error) {
       console.error("Error loading announcements:", error);
     }
   }
-
-  loadAnnouncements();
+  loadPublicAnnouncements();
 });
