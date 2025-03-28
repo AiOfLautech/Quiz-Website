@@ -13,9 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static public files
-app.use(express.static(path.join(__dirname, '../admin')));
-app.use(express.static(path.join(__dirname, '../frontend/pages')));
+// Serve static admin pages on the /admin route
+app.use('/admin', express.static(path.join(__dirname, '../admin')));
+
+// Serve static public pages on the root route
+app.use('/', express.static(path.join(__dirname, '../frontend/pages')));
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
 app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
 app.use('/assets', express.static(path.join(__dirname, '../frontend/assets')));
@@ -37,9 +39,13 @@ app.use('/api/messaging', messagingRoutes);
 app.use('/api/ai-chat', aiChatRoutes);
 app.use('/api/public', publicRoutes);
 
-// Fallback for 404 – serve a custom 404 page if desired
-app.get('*', (req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
+// Fallback for 404 – if the URL starts with /admin, serve the admin 404 page; otherwise, serve the public 404 page.
+app.use((req, res) => {
+  if (req.originalUrl.startsWith('/admin')) {
+    res.status(404).sendFile(path.join(__dirname, '../admin/404.html'));
+  } else {
+    res.status(404).sendFile(path.join(__dirname, '../frontend/pages/404.html'));
+  }
 });
 
 const PORT = process.env.PORT || 5000;
