@@ -44,7 +44,7 @@ app.use((req, res) => {
   if (req.originalUrl.startsWith('/admin')) {
     res.status(404).sendFile(path.join(__dirname, '../admin/404.html'));
   } else {
-    res.status(404).sendFile(path.join(__dirname, '../frontend/pages/404.html'));
+    res.status(404).sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
   }
 });
 
