@@ -6,7 +6,6 @@ const Discussion = require('../models/discussionModel');
 // Get all announcements (public)
 exports.getAnnouncements = async (req, res) => {
   try {
-    // Fetch all announcements sorted by newest first
     const announcements = await Announcement.find().sort({ createdAt: -1 });
     res.json({ announcements });
   } catch (error) {
@@ -37,10 +36,9 @@ exports.getAccommodations = async (req, res) => {
   }
 };
 
-// Get all discussion posts (public discussion board)
+// Get all discussion posts (public)
 exports.getDiscussions = async (req, res) => {
   try {
-    // Populate the username of the post creator
     const discussions = await Discussion.find()
       .populate('createdBy', 'username')
       .sort({ createdAt: -1 });
