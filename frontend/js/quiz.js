@@ -1,6 +1,5 @@
-// quiz.js placeholder
 document.addEventListener("DOMContentLoaded", async () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || localStorage.getItem("adminToken");
   const courseId = localStorage.getItem("selectedCourseId");
   const quizContainer = document.getElementById("quizContainer");
   const timerDisplay = document.getElementById("timeRemaining");
@@ -13,7 +12,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   let answers = [];
   let timerInterval;
 
-  // Load quiz session from API
+  if (!courseId) {
+    alert("No course selected. Please select a course from the main page.");
+    window.location.href = "main.html";
+    return;
+  }
+
   async function loadQuiz() {
     try {
       const res = await fetch("/api/quiz/start", {
@@ -26,14 +30,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       const data = await res.json();
       if (res.ok) {
-        // Save quiz session ID for later submission
         localStorage.setItem("quizSessionId", data.quizSessionId);
         questions = data.questions;
         answers = new Array(questions.length).fill("");
         displayQuestion(currentQuestionIndex);
         startTimer(data.timerDuration);
       } else {
-        alert(data.message || "Failed to load quiz");
+        alert(data.message || "Failed to start quiz");
       }
     } catch (error) {
       console.error("Error loading quiz:", error);
@@ -108,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       const data = await res.json();
       if (res.ok) {
-        localStorage.setItem("quizResult", JSON.stringify(data));
+        alert("Quiz submitted. Your score: " + data.score);
         window.location.href = "result.html";
       } else {
         alert(data.message || "Quiz submission failed");
