@@ -11,9 +11,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentQuestionIndex = 0;
   let answers = [];
   let timerInterval;
+  let remainingTime = 0;
 
   if (!courseId) {
-    alert("No course selected. Please select a course from the main page.");
+    alert("No course selected.");
     window.location.href = "main.html";
     return;
   }
@@ -33,8 +34,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("quizSessionId", data.quizSessionId);
         questions = data.questions;
         answers = new Array(questions.length).fill("");
+        // Use remainingTime from response; if not provided, default to timerDuration * 60.
+        remainingTime = data.remainingTime || (data.timerDuration ? data.timerDuration * 60 : 0);
         displayQuestion(currentQuestionIndex);
-        startTimer(data.timerDuration);
+        startTimer(remainingTime);
       } else {
         alert(data.message || "Failed to start quiz");
       }
@@ -59,11 +62,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       html += `</div>`;
     } else {
-      // Text input for open-ended questions
-      html += `<div class="options"><input type="text" id="userAnswer" placeholder="Your answer" value="${answers[index] || ''}"></div>`;
+      // Open-ended question: add a text input and an "Enter" button
+      html += `<div class="options">
+                <input type="text" id="userAnswer" placeholder="Your answer" value="${answers[index] || ''}">
+                <button id="enterAnswer" onclick="saveCurrentAnswer(); return false;">Enter</button>
+              </div>`;
     }
     quizContainer.innerHTML = html;
   }
+
+  window.saveCurrentAnswer = function() {
+    const userAnswerInput = document.getElementById("userAnswer");
+    if (userAnswerInput) {
+      answers[currentQuestionIndex] = userAnswerInput.value;
+    }
+  };
 
   function saveAnswer() {
     if (questions[currentQuestionIndex].options && questions[currentQuestionIndex].options.length > 0) {
@@ -121,8 +134,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  function startTimer(duration) {
-    let time = duration * 60; // convert minutes to seconds
+  function startTimer(initialTime) {
+    let time = initialTime;
     timerInterval = setInterval(() => {
       const minutes = Math.floor(time / 60);
       const seconds = time % 60;
