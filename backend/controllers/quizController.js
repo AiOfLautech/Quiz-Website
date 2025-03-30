@@ -2,30 +2,29 @@ const QuizSession = require('../models/quizSessionModel');
 const Course = require('../models/courseModel');
 
 /**
- * Start a quiz session:
- *  - Retrieve the course by ID.
- *  - Shuffle questions.
- *  - Limit the number of questions if specified.
- *  - Save a new quiz session for the user.
+ * Start a quiz session.
+ * - Expects a courseId in the request body.
+ * - Looks up the course, shuffles the question bank,
+ *   slices questions if needed, and saves a new quiz session.
  */
 exports.startQuiz = async (req, res) => {
   const { courseId } = req.body;
-  const userId = req.user ? req.user._id : null;
+  const userId = req.user._id;
   try {
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
-    // Check for existing active quiz session for this user & course
+    // Check for an active session (if you want persistence)
     let session = await QuizSession.findOne({ userId, courseId, endTime: null });
     if (!session) {
-      let questions = course.questionBank;
-      // Shuffle questions using Fisher-Yates
+      let questions = [...course.questionBank]; // clone question bank
+      // Shuffle questions (Fisher-Yates)
       for (let i = questions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [questions[i], questions[j]] = [questions[j], questions[i]];
       }
-      // Limit the number of questions if specified
+      // Limit number of questions if course.numberOfQuestions is set
       if (course.numberOfQuestions && course.numberOfQuestions < questions.length) {
         questions = questions.slice(0, course.numberOfQuestions);
       }
@@ -41,7 +40,7 @@ exports.startQuiz = async (req, res) => {
       message: "Quiz started",
       quizSessionId: session._id,
       questions: session.questions,
-      timerDuration: course.timerDuration // in minutes
+      timerDuration: course.timerDuration // timer in minutes
     });
   } catch (error) {
     console.error("Error starting quiz:", error);
@@ -50,10 +49,9 @@ exports.startQuiz = async (req, res) => {
 };
 
 /**
- * Submit quiz answers:
- *  - Save user answers.
- *  - Mark the end time.
- *  - Calculate a simple score.
+ * Submit quiz answers.
+ * - Expects quizSessionId and answers in the request body.
+ * - Marks the end time and calculates a simple score.
  */
 exports.submitQuiz = async (req, res) => {
   const { quizSessionId, answers } = req.body;
@@ -66,12 +64,13 @@ exports.submitQuiz = async (req, res) => {
     session.endTime = Date.now();
     await session.save();
 
-    // Calculate score (assumes each question object has a property 'answer')
+    // Simple scoring: compare provided answers with correct ones
     let score = 0;
     session.questions.forEach((question, index) => {
       if (
         answers[index] &&
-        answers[index].toString().trim().toLowerCase() === question.answer.toString().trim().toLowerCase()
+        answers[index].toString().trim().toLowerCase() ===
+          question.answer.toString().trim().toLowerCase()
       ) {
         score++;
       }
