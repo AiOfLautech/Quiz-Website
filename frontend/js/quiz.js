@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Load the quiz session from the server
   async function loadQuiz() {
     try {
       const res = await fetch("/api/quiz/start", {
@@ -35,21 +34,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert(data.message || "Failed to start quiz");
         return;
       }
-      // Ensure that data.questions exists and is an array
+      // Ensure questions array exists
       if (!data.questions || !Array.isArray(data.questions)) {
-        console.error("Questions data is undefined or not an array:", data);
+        console.error("Questions data is undefined or invalid:", data);
         alert("Quiz questions are not available.");
         return;
       }
-      // Save the quiz session ID and questions
       localStorage.setItem("quizSessionId", data.quizSessionId);
       questions = data.questions;
       answers = new Array(questions.length).fill("");
-      
-      // Use the provided remainingTime or default timerDuration * 60 if not provided
       remainingTime = data.remainingTime !== undefined ? data.remainingTime : (data.timerDuration ? data.timerDuration * 60 : 0);
-      
-      // Display the first question
       displayQuestion(currentQuestionIndex);
       startTimer(remainingTime);
     } catch (error) {
@@ -58,11 +52,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Render the current question on the page
   function displayQuestion(index) {
     if (index < 0 || index >= questions.length) return;
     const question = questions[index];
-    // Check if question text exists
     if (!question || !question.question) {
       quizContainer.innerHTML = `<p>Error: Question data is undefined.</p>`;
       return;
@@ -80,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       html += `</div>`;
     } else {
-      // For open-ended questions, show a text input and an Enter button
+      // Open-ended question: provide a text input and an "Enter" button
       html += `<div class="options">
                 <input type="text" id="userAnswer" placeholder="Your answer" value="${answers[index] || ''}">
                 <button id="enterAnswer" onclick="saveCurrentAnswer(); return false;">Enter</button>
@@ -89,7 +81,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     quizContainer.innerHTML = html;
   }
 
-  // Save answer for current question when using Next/Prev buttons
+  window.saveCurrentAnswer = function() {
+    const userAnswerInput = document.getElementById("userAnswer");
+    if (userAnswerInput) {
+      answers[currentQuestionIndex] = userAnswerInput.value;
+      alert("Answer saved!");
+    }
+  };
+
   function saveAnswer() {
     if (questions[currentQuestionIndex].options && Array.isArray(questions[currentQuestionIndex].options)) {
       const options = document.getElementsByName("option");
@@ -106,16 +105,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Called by the Enter button for open-ended questions
-  window.saveCurrentAnswer = function() {
-    const userAnswerInput = document.getElementById("userAnswer");
-    if (userAnswerInput) {
-      answers[currentQuestionIndex] = userAnswerInput.value;
-      alert("Answer saved!");
-    }
-  };
-
-  // Next and Previous navigation
   prevBtn.addEventListener("click", () => {
     if (currentQuestionIndex > 0) {
       saveAnswer();
@@ -132,7 +121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Quiz submission
   submitBtn.addEventListener("click", async () => {
     saveAnswer();
     const quizSessionId = localStorage.getItem("quizSessionId");
@@ -157,7 +145,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Timer function: continues countdown from the remaining time
   function startTimer(initialTime) {
     let time = initialTime;
     timerInterval = setInterval(() => {
