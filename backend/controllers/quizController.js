@@ -3,10 +3,9 @@ const Course = require('../models/courseModel');
 
 /**
  * Start or resume a quiz session.
- * - Expects courseId in req.body.
- * - Uses req.user._id for the user.
- * - If a session exists (endTime is null), return it with the remaining time.
- * - Otherwise, create a new session: shuffle questions, limit by numberOfQuestions, and store startTime.
+ * Expects courseId in req.body and uses req.user._id.
+ * - If a session exists (endTime is null), returns that session with the remaining time.
+ * - Otherwise, creates a new session (shuffling questions only once).
  */
 exports.startQuiz = async (req, res) => {
   const { courseId } = req.body;
@@ -16,10 +15,13 @@ exports.startQuiz = async (req, res) => {
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
-    let session = await QuizSession.findOne({ userId, courseId, endTime: null });
+    if (!Array.isArray(course.questionBank) || course.questionBank.length === 0) {
+      return res.status(400).json({ message: "No questions available for this course" });
+    }
     const totalTimeSeconds = course.timerDuration * 60;
+    let session = await QuizSession.findOne({ userId, courseId, endTime: null });
     if (session) {
-      // Calculate remaining time: total - elapsed
+      // Calculate remaining time: total - elapsed seconds
       const elapsedSeconds = Math.floor((Date.now() - session.startTime.getTime()) / 1000);
       const remainingTime = Math.max(totalTimeSeconds - elapsedSeconds, 0);
       return res.json({
@@ -27,14 +29,17 @@ exports.startQuiz = async (req, res) => {
         quizSessionId: session._id,
         questions: session.questions,
         remainingTime, // in seconds
+        timerDuration: course.timerDuration, // sent for reference
       });
     }
-    // New session: shuffle questions and limit them
+    // Create a new session: shuffle questions only once
     let questions = [...course.questionBank]; // clone the question bank
+    // Shuffle using Fisher-Yates algorithm
     for (let i = questions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [questions[i], questions[j]] = [questions[j], questions[i]];
     }
+    // Limit questions if numberOfQuestions is set
     if (course.numberOfQuestions && course.numberOfQuestions < questions.length) {
       questions = questions.slice(0, course.numberOfQuestions);
     }
@@ -50,6 +55,7 @@ exports.startQuiz = async (req, res) => {
       quizSessionId: session._id,
       questions: session.questions,
       remainingTime: totalTimeSeconds,
+      timerDuration: course.timerDuration,
     });
   } catch (error) {
     console.error("Error starting quiz:", error);
@@ -59,8 +65,8 @@ exports.startQuiz = async (req, res) => {
 
 /**
  * Submit quiz answers.
- * - Expects quizSessionId and answers array in req.body.
- * - Marks the session as ended and calculates a simple score.
+ * Expects quizSessionId and answers array in req.body.
+ * Marks the session end and calculates a score.
  */
 exports.submitQuiz = async (req, res) => {
   const { quizSessionId, answers } = req.body;
@@ -73,9 +79,9 @@ exports.submitQuiz = async (req, res) => {
     session.endTime = new Date();
     await session.save();
 
+    // Simple scoring: compare each answer with the stored correct answer
     let score = 0;
     session.questions.forEach((question, index) => {
-      // Compare answers case-insensitively after trimming
       if (
         answers[index] &&
         answers[index].toString().trim().toLowerCase() ===
@@ -84,6 +90,7 @@ exports.submitQuiz = async (req, res) => {
         score++;
       }
     });
+
     res.json({ message: "Quiz submitted", score });
   } catch (error) {
     console.error("Error submitting quiz:", error);
