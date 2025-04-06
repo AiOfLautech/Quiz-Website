@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Announcements - Admin Panel</title>
+  <title>Manage Announcements - Admin Panel</title>
   <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -19,7 +19,6 @@
       <nav>
         <ul>
           <li><a href="admin.html">Dashboard</a></li>
-          <li><a href="quizManagement.html"><i class="fas fa-tasks"></i> Quiz Management</a></li>
           <li><a href="announcements.html" class="active"><i class="fas fa-bullhorn"></i> Announcements</a></li>
           <li><a href="accomodations.html"><i class="fas fa-hotel"></i> Accommodations</a></li>
           <li><a href="adminMessaging.html"><i class="fas fa-envelope"></i> Messaging</a></li>
@@ -29,6 +28,11 @@
       </nav>
     </aside>
     <div class="main-content">
+      <header>
+        <div class="user-info">
+          <span id="usernameDisplay">Admin</span>
+        </div>
+      </header>
       <h1>Manage Announcements</h1>
       <form id="announcementForm">
         <label for="announcementTitle">Title:</label>
@@ -37,8 +41,9 @@
         <textarea id="announcementContent" name="content" rows="4" required></textarea>
         <button type="submit">Create Announcement</button>
       </form>
+      <h2>Existing Announcements</h2>
       <div id="announcementsList">
-        <!-- Announcements will be loaded dynamically via admin.js -->
+        <!-- Announcements loaded dynamically -->
       </div>
     </div>
   </div>
