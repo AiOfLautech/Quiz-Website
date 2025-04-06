@@ -3,6 +3,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const authMiddleware = require('../middleware/authMiddleware');
 
+// Admin-protected endpoints
 router.post('/announcement', authMiddleware, adminController.createAnnouncement);
 router.patch('/announcement/:announcementId', authMiddleware, adminController.updateAnnouncement);
 router.delete('/announcement/:announcementId', authMiddleware, adminController.deleteAnnouncement);
@@ -11,7 +12,7 @@ router.post('/accommodation', authMiddleware, adminController.createAccommodatio
 router.patch('/accommodation/:accommodationId', authMiddleware, adminController.updateAccommodation);
 router.delete('/accommodation/:accommodationId', authMiddleware, adminController.deleteAccommodation);
 
-// Generate auto-password endpoint (public)
+// Public endpoint for auto-password generation
 router.post('/generate-password', adminController.generateAutoPassword);
 
 module.exports = router;
