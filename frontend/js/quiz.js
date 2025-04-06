@@ -8,11 +8,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const submitBtn = document.getElementById("submitQuiz");
 
   let questions = [];
-  let currentQuestionIndex = 0;
+  let currentQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex")) || 0;
   let answers = [];
   let timerInterval;
-  let remainingTime = 0;
-  
+  let remainingTime = parseInt(localStorage.getItem("remainingTime")) || 0;
+
   if (!courseId) {
     alert("No course selected. Please select a course from the main page.");
     window.location.href = "main.html";
@@ -21,29 +21,37 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function loadQuiz() {
     try {
+      const sessionId = localStorage.getItem("quizSessionId");
       const res = await fetch("/api/quiz/start", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ courseId })
+        body: JSON.stringify({ courseId, quizSessionId: sessionId })
       });
+
       const data = await res.json();
       if (!res.ok) {
         alert(data.message || "Failed to start quiz");
         return;
       }
-      // Ensure questions array exists
+
       if (!data.questions || !Array.isArray(data.questions)) {
         console.error("Questions data is undefined or invalid:", data);
         alert("Quiz questions are not available.");
         return;
       }
-      localStorage.setItem("quizSessionId", data.quizSessionId);
+
       questions = data.questions;
-      answers = new Array(questions.length).fill("");
-      remainingTime = data.remainingTime !== undefined ? data.remainingTime : (data.timerDuration ? data.timerDuration * 60 : 0);
+      answers = JSON.parse(localStorage.getItem("answers")) || new Array(questions.length).fill("");
+
+      if (!localStorage.getItem("quizSessionId")) {
+        localStorage.setItem("quizSessionId", data.quizSessionId);
+        remainingTime = data.remainingTime !== undefined ? data.remainingTime : (data.timerDuration ? data.timerDuration * 60 : 0);
+        localStorage.setItem("remainingTime", remainingTime);
+      }
+
       displayQuestion(currentQuestionIndex);
       startTimer(remainingTime);
     } catch (error) {
@@ -54,12 +62,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function displayQuestion(index) {
     if (index < 0 || index >= questions.length) return;
+
     const question = questions[index];
     if (!question || !question.question) {
       quizContainer.innerHTML = `<p>Error: Question data is undefined.</p>`;
       return;
     }
+
     let html = `<div class="question"><h2>Question ${index + 1}: ${question.question}</h2></div>`;
+
     if (question.options && Array.isArray(question.options) && question.options.length > 0) {
       html += `<div class="options">`;
       question.options.forEach((option, i) => {
@@ -67,24 +78,25 @@ document.addEventListener("DOMContentLoaded", async () => {
           <div>
             <input type="radio" name="option" id="option${i}" value="${option}" ${answers[index] === option ? "checked" : ""}>
             <label for="option${i}">${option}</label>
-          </div>
-        `;
+          </div>`;
       });
       html += `</div>`;
     } else {
-      // Open-ended question: provide a text input and an "Enter" button
       html += `<div class="options">
                 <input type="text" id="userAnswer" placeholder="Your answer" value="${answers[index] || ''}">
                 <button id="enterAnswer" onclick="saveCurrentAnswer(); return false;">Enter</button>
                </div>`;
     }
+
     quizContainer.innerHTML = html;
+    localStorage.setItem("currentQuestionIndex", currentQuestionIndex);
   }
 
-  window.saveCurrentAnswer = function() {
+  window.saveCurrentAnswer = function () {
     const userAnswerInput = document.getElementById("userAnswer");
     if (userAnswerInput) {
       answers[currentQuestionIndex] = userAnswerInput.value;
+      localStorage.setItem("answers", JSON.stringify(answers));
       alert("Answer saved!");
     }
   };
@@ -103,6 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         answers[currentQuestionIndex] = userAnswerInput.value;
       }
     }
+    localStorage.setItem("answers", JSON.stringify(answers));
   }
 
   prevBtn.addEventListener("click", () => {
@@ -136,6 +149,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await res.json();
       if (res.ok) {
         alert("Quiz submitted. Your score: " + data.score);
+        localStorage.removeItem("answers");
+        localStorage.removeItem("currentQuestionIndex");
+        localStorage.removeItem("remainingTime");
+        localStorage.removeItem("quizSessionId");
         window.location.href = "result.html";
       } else {
         alert(data.message || "Quiz submission failed");
@@ -148,14 +165,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   function startTimer(initialTime) {
     let time = initialTime;
     timerInterval = setInterval(() => {
-      const minutes = Math.floor(time / 60);
-      const seconds = time % 60;
-      timerDisplay.textContent = `${minutes}m ${seconds}s`;
       if (time <= 0) {
         clearInterval(timerInterval);
         submitBtn.click();
+        return;
       }
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      timerDisplay.textContent = `${minutes}m ${seconds}s`;
       time--;
+      localStorage.setItem("remainingTime", time);
     }, 1000);
   }
 
