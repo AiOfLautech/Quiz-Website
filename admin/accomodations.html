@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Accommodations - Admin Panel</title>
+  <title>Manage Accommodations - Admin Panel</title>
   <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -19,7 +19,6 @@
       <nav>
         <ul>
           <li><a href="admin.html">Dashboard</a></li>
-          <li><a href="quizManagement.html"><i class="fas fa-tasks"></i> Quiz Management</a></li>
           <li><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
           <li><a href="accomodations.html" class="active"><i class="fas fa-hotel"></i> Accommodations</a></li>
           <li><a href="adminMessaging.html"><i class="fas fa-envelope"></i> Messaging</a></li>
@@ -29,18 +28,24 @@
       </nav>
     </aside>
     <div class="main-content">
+      <header>
+        <div class="user-info">
+          <span id="usernameDisplay">Admin</span>
+        </div>
+      </header>
       <h1>Manage Accommodations</h1>
       <form id="accommodationForm">
         <label for="accommodationTitle">Title:</label>
         <input type="text" id="accommodationTitle" name="title" required>
         <label for="accommodationDescription">Description:</label>
         <textarea id="accommodationDescription" name="description" rows="4" required></textarea>
-        <label for="accommodationVideoUrl">Video URL:</label>
+        <label for="accommodationVideoUrl">Video URL (optional):</label>
         <input type="text" id="accommodationVideoUrl" name="videoUrl">
         <button type="submit">Create Accommodation</button>
       </form>
+      <h2>Existing Accommodations</h2>
       <div id="accommodationsList">
-        <!-- Accommodations posts will be loaded dynamically via admin.js -->
+        <!-- Accommodations loaded dynamically -->
       </div>
     </div>
   </div>
