@@ -13,16 +13,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static admin pages on the /admin route
+// Serve static admin pages on /admin
 app.use('/admin', express.static(path.join(__dirname, '../admin')));
 
-// Serve static public pages on the root route
+// Serve static public pages on root
 app.use('/', express.static(path.join(__dirname, '../frontend/pages')));
 app.use('/css', express.static(path.join(__dirname, '../frontend/css')));
 app.use('/js', express.static(path.join(__dirname, '../frontend/js')));
 app.use('/assets', express.static(path.join(__dirname, '../frontend/assets')));
 
-// API Routes (protected and public)
+// API Routes
 const authRoutes = require('./routes/authRoutes');
 const quizRoutes = require('./routes/quizRoutes');
 const quizManagementRoutes = require('./routes/quizManagementRoutes');
@@ -39,10 +39,10 @@ app.use('/api/messaging', messagingRoutes);
 app.use('/api/ai-chat', aiChatRoutes);
 app.use('/api/public', publicRoutes);
 
-// Fallback for 404 – if the URL starts with /admin, serve the admin 404 page; otherwise, serve the public 404 page.
+// Fallback 404: serve admin 404 for /admin, public 404 for others
 app.use((req, res) => {
   if (req.originalUrl.startsWith('/admin')) {
-    res.status(404).sendFile(path.join(__dirname, '../admin/404.html'));
+    res.status(404).sendFile(path.join(__dirname, '../admin/admin.html'));
   } else {
     res.status(404).sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
   }
