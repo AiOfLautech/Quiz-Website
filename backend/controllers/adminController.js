@@ -4,10 +4,14 @@ const User = require('../models/userModel');
 const Announcement = require('../models/announcementModel');
 const Accommodation = require('../models/accommodationModel');
 
+/**
+ * Generate an auto-generated password for an admin user.
+ * This endpoint is public (does not require token).
+ */
 exports.generateAutoPassword = async (req, res) => {
   try {
-    // This endpoint is public (no auth check)
     const { username } = req.body;
+    // Find the admin user by username and ensure they are admin.
     const user = await User.findOne({ username, role: 'admin' });
     if (!user) {
       return res.status(404).json({ message: 'Admin user not found' });
@@ -27,12 +31,16 @@ exports.generateAutoPassword = async (req, res) => {
   }
 };
 
+/**
+ * Create a new announcement.
+ */
 exports.createAnnouncement = async (req, res) => {
   try {
+    const { title, content } = req.body;
+    // In a protected route, req.user should be set by the authMiddleware.
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const { title, content } = req.body;
     const newAnnouncement = new Announcement({
       title,
       content,
@@ -46,13 +54,16 @@ exports.createAnnouncement = async (req, res) => {
   }
 };
 
+/**
+ * Update an existing announcement.
+ */
 exports.updateAnnouncement = async (req, res) => {
   try {
+    const { announcementId } = req.params;
+    const { title, content } = req.body;
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const { announcementId } = req.params;
-    const { title, content } = req.body;
     const announcement = await Announcement.findByIdAndUpdate(
       announcementId,
       { title, content },
@@ -68,12 +79,15 @@ exports.updateAnnouncement = async (req, res) => {
   }
 };
 
+/**
+ * Delete an announcement.
+ */
 exports.deleteAnnouncement = async (req, res) => {
   try {
+    const { announcementId } = req.params;
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const { announcementId } = req.params;
     await Announcement.findByIdAndDelete(announcementId);
     return res.json({ message: 'Announcement deleted successfully' });
   } catch (error) {
@@ -82,12 +96,15 @@ exports.deleteAnnouncement = async (req, res) => {
   }
 };
 
+/**
+ * Create a new accommodation post.
+ */
 exports.createAccommodation = async (req, res) => {
   try {
+    const { title, description, videoUrl } = req.body;
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const { title, description, videoUrl } = req.body;
     const newAccommodation = new Accommodation({
       title,
       description,
@@ -102,13 +119,16 @@ exports.createAccommodation = async (req, res) => {
   }
 };
 
+/**
+ * Update an existing accommodation post.
+ */
 exports.updateAccommodation = async (req, res) => {
   try {
+    const { accommodationId } = req.params;
+    const { title, description, videoUrl } = req.body;
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const { accommodationId } = req.params;
-    const { title, description, videoUrl } = req.body;
     const accommodation = await Accommodation.findByIdAndUpdate(
       accommodationId,
       { title, description, videoUrl },
@@ -124,12 +144,15 @@ exports.updateAccommodation = async (req, res) => {
   }
 };
 
+/**
+ * Delete an accommodation post.
+ */
 exports.deleteAccommodation = async (req, res) => {
   try {
+    const { accommodationId } = req.params;
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const { accommodationId } = req.params;
     await Accommodation.findByIdAndDelete(accommodationId);
     return res.json({ message: 'Accommodation deleted successfully' });
   } catch (error) {
