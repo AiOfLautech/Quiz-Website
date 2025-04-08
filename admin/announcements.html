@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Manage Announcements - Admin Panel</title>
-  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon" />
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
   <div class="admin-container">
     <aside class="sidebar">
       <div class="logo-container">
-        <img src="../assets/images/logo.png" alt="Logo" class="logo">
+        <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h2>Admin Panel</h2>
       </div>
       <nav>
         <ul>
           <li><a href="admin.html">Dashboard</a></li>
-          <li><a href="announcements.html" class="active"><i class="fas fa-bullhorn"></i> Announcements</a></li>
-          <li><a href="accomodations.html"><i class="fas fa-hotel"></i> Accommodations</a></li>
+          <li><a href="announcement.html" class="active"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+          <li><a href="accommodation.html"><i class="fas fa-hotel"></i> Accommodations</a></li>
+          <li><a href="quizManagement.html"><i class="fas fa-tasks"></i> Quiz Management</a></li>
           <li><a href="adminMessaging.html"><i class="fas fa-envelope"></i> Messaging</a></li>
           <li><a href="profileAdmin.html"><i class="fas fa-user-cog"></i> Profile</a></li>
           <li><a href="autoPass.html"><i class="fas fa-key"></i> Generate Password</a></li>
@@ -28,25 +29,24 @@
       </nav>
     </aside>
     <div class="main-content">
-      <header>
-        <div class="user-info">
-          <span id="usernameDisplay">Admin</span>
-        </div>
-      </header>
       <h1>Manage Announcements</h1>
       <form id="announcementForm">
+        <!-- Hidden field to store an ID when editing -->
+        <input type="hidden" id="announcementId" value="" />
         <label for="announcementTitle">Title:</label>
-        <input type="text" id="announcementTitle" name="title" required>
+        <input type="text" id="announcementTitle" name="title" required />
+
         <label for="announcementContent">Content:</label>
         <textarea id="announcementContent" name="content" rows="4" required></textarea>
-        <button type="submit">Create Announcement</button>
+
+        <button type="submit">Save Announcement</button>
       </form>
-      <h2>Existing Announcements</h2>
       <div id="announcementsList">
-        <!-- Announcements loaded dynamically -->
+        <!-- List of announcements will be loaded here -->
       </div>
     </div>
   </div>
+  <!-- The admin.js script (see below) handles CRUD operations -->
   <script src="admin.js"></script>
 </body>
 </html>
