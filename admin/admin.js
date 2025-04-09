@@ -156,63 +156,103 @@ document.addEventListener("DOMContentLoaded", function() {
   loadAnnouncements();
 
   // --- Accommodation Management Section ---
-  const accommodationForm = document.getElementById("accommodationForm");
-  if (accommodationForm) {
-    accommodationForm.addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const title = document.getElementById("accommodationTitle").value;
-      const description = document.getElementById("accommodationDescription").value;
-      const videoUrl = document.getElementById("accommodationVideoUrl").value;
-      try {
-        const token = localStorage.getItem("adminToken");
-        const res = await fetch("/api/admin/accommodation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ title, description, videoUrl })
-        });
-        const data = await res.json();
-        if (res.ok) {
-          alert("Accommodation post created successfully");
-          accommodationForm.reset();
-          loadAccommodations();
-        } else {
-          alert(data.message || "Failed to create accommodation");
-        }
-      } catch (error) {
-        console.error("Error creating accommodation:", error);
-      }
-    });
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("accommodationForm");
+  const listContainer = document.getElementById("accommodationsList");
 
   async function loadAccommodations() {
     try {
       const token = localStorage.getItem("adminToken");
       const res = await fetch("/api/admin/accommodation", {
-        headers: { "Authorization": `Bearer ${token}` }
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
       });
       const data = await res.json();
       if (res.ok && data.accommodations) {
-        const accommodationsList = document.getElementById("accommodationsList");
-        accommodationsList.innerHTML = "";
-        data.accommodations.forEach(post => {
-          const div = document.createElement("div");
-          div.classList.add("accommodation-item");
-          div.innerHTML = `<h2>${post.title}</h2><p>${post.description}</p>`;
-          if (post.videoUrl) {
-            div.innerHTML += `<iframe src="${post.videoUrl}" allowfullscreen></iframe>`;
-          }
-          accommodationsList.appendChild(div);
-        });
+        listContainer.innerHTML = data.accommodations
+          .map(post =>
+            `<div class="accommodation-item" data-id="${post._id}">
+              <h2>${post.title}</h2>
+              <p>${post.description}</p>
+              ${post.videoUrl ? `<iframe src="${post.videoUrl}" allowfullscreen></iframe>` : ""}
+              <button onclick="editAccommodation('${post._id}')">Edit</button>
+              <button onclick="deleteAccommodation('${post._id}')">Delete</button>
+            </div>`
+          ).join('');
+      } else {
+        listContainer.innerHTML = "<p>No accommodations found.</p>";
       }
     } catch (error) {
       console.error("Error loading accommodations:", error);
     }
   }
-  loadAccommodations();
 
+  window.editAccommodation = (id) => {
+    const item = document.querySelector(`.accommodation-item[data-id="${id}"]`);
+    const title = item.querySelector("h2").innerText;
+    const description = item.querySelector("p").innerText;
+    // For video URL, you may need to extract from an iframe if available
+    const iframe = item.querySelector("iframe");
+    const videoUrl = iframe ? iframe.getAttribute("src") : "";
+    document.getElementById("accommodationId").value = id;
+    document.getElementById("accommodationTitle").value = title;
+    document.getElementById("accommodationDescription").value = description;
+    document.getElementById("accommodationVideoUrl").value = videoUrl;
+  };
+
+  window.deleteAccommodation = async (id) => {
+    if (!confirm("Are you sure you want to delete this accommodation?")) return;
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(`/api/admin/accommodation/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      const data = await res.json();
+      alert(data.message);
+      loadAccommodations();
+    } catch (error) {
+      console.error("Error deleting accommodation:", error);
+    }
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("accommodationId").value;
+    const title = document.getElementById("accommodationTitle").value;
+    const description = document.getElementById("accommodationDescription").value;
+    const videoUrl = document.getElementById("accommodationVideoUrl").value;
+    const token = localStorage.getItem("adminToken");
+    let url = "/api/admin/accommodation";
+    let method = "POST";
+    if (id) {
+      url = `/api/admin/accommodation/${id}`;
+      method = "PATCH";
+    }
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ title, description, videoUrl })
+      });
+      const data = await res.json();
+      alert(data.message);
+      form.reset();
+      loadAccommodations();
+    } catch (error) {
+      console.error("Error saving accommodation:", error);
+    }
+  });
+
+  loadAccommodations();
+    
   // --- Admin Profile Management (Example) ---
   const adminProfileForm = document.getElementById("adminProfileForm");
   if (adminProfileForm) {
