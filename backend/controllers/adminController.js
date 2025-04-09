@@ -1,9 +1,8 @@
-const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const User = require('../models/userModel');
-const Announcement = require('../models/announcementModel');
-const Accommodation = require('../models/accommodationModel');
-
+const Announcement = require('../models/Announcement');
+const Accommodation = require('../models/Accommodation');
 /**
  * Generate an auto-generated password for an admin user.
  * This endpoint is public (does not require token).
